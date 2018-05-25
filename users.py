@@ -129,8 +129,10 @@ def deactivate_user(id):
     if not user:
         return jsonify({'message': 'User not found!'})
 
-    user.active = False
+    if not user.active:
+        return jsonify({'message': 'User is already deactivated!'})
 
+    user.active = False
     db.session.commit()
 
     return jsonify({'message': f'User ({id}) deactivated!'})
@@ -145,8 +147,10 @@ def activate_user(id):
     if not user:
         return jsonify({'message': 'User not found!'})
 
-    user.active = True
+    if user.active:
+        return jsonify({'message': 'User is already active!'})
 
+    user.active = True
     db.session.commit()
 
     return jsonify({'message': f'User ({id}) activated!'})
