@@ -14,22 +14,24 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-#
+# Models
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
+    first_name = db.Column(db.String(20), unique=False, nullable=True)
+    last_name = db.Column(db.String(20), unique=False, nullable=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80))
     admin = db.Column(db.Boolean)
     join_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-#
+# Routes
 
 @app.route('/')
 def index():
-    return 'Check out this API!'
+    return 'The API is ready!'
 
 @app.route('/users', methods=['GET'])
 def get_all_users():
@@ -43,6 +45,8 @@ def get_all_users():
     for user in users:
         user_data = {}
         user_data['public_id'] = user.public_id
+        user_data['first_name'] = user.first_name
+        user_data['last_name'] = user.last_name
         user_data['username'] = user.username
         user_data['email'] = user.email
         user_data['admin'] = user.admin
@@ -59,6 +63,8 @@ def create_user():
     data = request.get_json()
     hashed_password = bcrypt.generate_password_hash(data['password'])
     new_user = User(public_id=str(secrets.token_hex(10)),
+                    first_name=data['first_name'],
+                    last_name=data['last_name'],
                     username=data['username'],
                     email=data['email'],
                     password=hashed_password,
