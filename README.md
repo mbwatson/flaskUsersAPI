@@ -8,12 +8,12 @@ This is hardcoded for an sqlite database. To use, you will need to install sqlit
 
 ## Setup
 
-In the application directory, run `python`, and initialize the database with the following commands.
+Run python in the application directory. Import the database object and initialize the database with the following commands.
 
     >>> from users import db
     >>> db.create_all()
 
-Exit python, and `ls` to ensure the database file, `users.db`, has been created. You can even jump into sqlite to check the presence of the table(s). In your terminal, run sqlite with `sqlite3 users.db`
+Exit python, with `exit()`. Ensure the database file, `users.db`, has been created; `ls` should show to ensure the database file, `users.db`, has been created. You can even jump into sqlite to check the presence of the `user` table(s). In your terminal, run sqlite with `sqlite3 users.db`
 
     sqlite> .tables
     user
@@ -30,6 +30,8 @@ Now you are ready to start your server with the following command.
 It will run in debug mode.
 
 ## Use
+
+Hitting the following endpoints with the given request methods will perform the described actions.
 
 * `/users` (`GET`) : Return all users
 * `/user/new` (`POST`) : Create a new user
