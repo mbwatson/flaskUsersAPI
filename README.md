@@ -4,7 +4,12 @@
 
 This uses `datetime`, `secrets`, `flask`, `flask_sqlalchemy`, and `flask_bcrypt`. The former two are part of the Python standard library. The latter will need to be installed. To do so, simply run `pip install flask`, `pip install flask_sqlalchemy`, and `pip install flask_bcrypt`.
 
-This is hardcoded for an sqlite database. To use, you will need to install sqlite. On a Debian-based system, run `sudo apt-get install sqlite3`.
+This is hardcoded to use sqlite database, although SQLAlchemy can be configured for other options. I'll describe how to set up sqlite. You will need sqlite on your machine; let's install sqlite3. You may already have it; if it's installed, the command `sqlite3 -version` will return a version number, as illustrated below.
+
+    `$ sqlite3 -version`
+    `2.8.17`
+
+If it is not present, the above command will throw an error at you, and you can install it with `sudo apt-get install sqlite3` on a Debian-based system.
 
 ## Setup
 
@@ -13,11 +18,10 @@ Run python in the application directory. Import the database object and initiali
     >>> from users import db
     >>> db.create_all()
 
-Exit python, with `exit()`. Ensure the database file, `users.db`, has been created; `ls` should show to ensure the database file, `users.db`, has been created. You can even jump into sqlite to check the presence of the `user` table(s). In your terminal, run sqlite with `sqlite3 users.db`
+Exit python, with `exit()`, and verify that the database file, `users.db`, has been created; `ls` should list the file. You can even jump into sqlite to check the presence of the `user` table. In your terminal, run sqlite with `sqlite3 users.db`
 
     sqlite> .tables
     user
-    sqlite>
 
 Exit sqlite with `Ctrl-D`.
 
@@ -27,7 +31,7 @@ Now you are ready to start your server with the following command.
 
     python users.py
 
-It will run in debug mode.
+It will run in debug mode. Nagivating to `localhost:5000` in your browser will show the message `The API is ready!`. Now you can hit the endpoints with your favorite application. [Postman](https://www.getpostman.com/) is a great option.
 
 ## Use
 
