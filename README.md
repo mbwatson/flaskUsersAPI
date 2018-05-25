@@ -35,6 +35,16 @@ It will run in debug mode. Nagivating to `localhost:5000` in your browser will s
 
 ## Use
 
+A user object looks like this:
+
+    {
+        "admin": false,
+        "email": "email@ddr.ess",
+        "join_date": "Sat, 05 Nov 1955 10:09:18 GMT",
+        "public_id": "c58824ff6c6c3d52d83c",
+        "username": "myUsername"
+    }
+
 Hitting the following endpoints with the given request methods will perform the described actions.
 
 * `/users` (`GET`) : Return all users
