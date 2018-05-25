@@ -39,7 +39,7 @@ Hitting the following endpoints with the given request methods will perform the 
 
 * `/users` (`GET`) : Return all users
 * `/user/new` (`POST`) : Create a new user
-* `/user/<id>` (`GET`) : Return a single user with public_id :id
-* `/user/promote/<id>` (`PUT`) : Give admin status to user with public_id :id
-* `/user/demote/<id>` (`PUT`) : Remove admin status from user with public_id :id
-* `/user/delete/<id>` (`DELETE`) : Delete user with public_id :id
+* `/user/<id>` (`GET`) : Return a single user with public_id `<id>`
+* `/user/promote/<id>` (`PUT`) : Give admin status to user with public_id `<id>`
+* `/user/demote/<id>` (`PUT`) : Remove admin status from user with public_id `<id>`
+* `/user/delete/<id>` (`DELETE`) : Delete user with public_id `<id>`
