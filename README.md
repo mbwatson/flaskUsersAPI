@@ -54,4 +54,6 @@ Hitting the following endpoints with the given request methods will perform the 
 * `/user/<id>` (`GET`) : Return a single user with public_id `<id>`
 * `/user/promote/<id>` (`PUT`) : Give admin status to user with public_id `<id>`
 * `/user/demote/<id>` (`PUT`) : Remove admin status from user with public_id `<id>`
+* `/user/deactivate/<id>` (`PUT`) : Deactivate user with public_id `<id>`
+* `/user/activate/<id>` (`PUT`) : Activate user with public_id `<id>`
 * `/user/delete/<id>` (`DELETE`) : Delete user with public_id `<id>`

@@ -24,7 +24,8 @@ class User(db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80))
-    admin = db.Column(db.Boolean)
+    active = db.Column(db.Boolean, nullable=False, default=True)
+    admin = db.Column(db.Boolean, nullable=False, default=False)
     join_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 # Routes
@@ -50,6 +51,7 @@ def get_all_users():
         user_data['username'] = user.username
         user_data['email'] = user.email
         user_data['admin'] = user.admin
+        user_data['active'] = user.active
         user_data['join_date'] = user.join_date
         users_list.append(user_data)
 
@@ -68,7 +70,7 @@ def create_user():
                     username=data['username'],
                     email=data['email'],
                     password=hashed_password,
-                    admin=False)
+                )
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'message': 'new user created'})
@@ -116,6 +118,38 @@ def demote_user(id):
     db.session.commit()
 
     return jsonify({'message': f'User ({id}) demoted!'})
+
+@app.route('/user/deactivate/<string:id>', methods=['PUT'])
+def deactivate_user(id):
+    '''
+    Deactivate user with public_id <id>
+    '''
+    user = User.query.filter_by(public_id=id).first()
+
+    if not user:
+        return jsonify({'message': 'User not found!'})
+
+    user.active = False
+
+    db.session.commit()
+
+    return jsonify({'message': f'User ({id}) deactivated!'})
+
+@app.route('/user/activate/<string:id>', methods=['PUT'])
+def activate_user(id):
+    '''
+    Activate user with public_id <id>
+    '''
+    user = User.query.filter_by(public_id=id).first()
+
+    if not user:
+        return jsonify({'message': 'User not found!'})
+
+    user.active = True
+
+    db.session.commit()
+
+    return jsonify({'message': f'User ({id}) activated!'})
 
 @app.route('/user/delete/<string:id>', methods=['DELETE'])
 def delete_user(id):
