@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
+import jwt
 import secrets
-
 #
 
 app = Flask(__name__)
@@ -34,10 +34,33 @@ class User(db.Model):
 def index():
     return 'The API is ready!'
 
+@app.route('/login')
+def login():
+    auth = request.authorization
+
+    if not auth or not auth.username or not auth.password:
+        return jsonify({'message': 'Username and password are required!'})
+
+    user = User.query.filter_by(username=auth.username).first()
+
+    if not user:
+        return jsonify({'message': 'Invalid login information!'})
+
+    if bcrypt.check_password_hash(user.password, auth.password):
+        token = jwt.encode({
+            'public_id': user.public_id,
+            'exp': datetime.utcnow() + timedelta(minutes=10)
+        }, app.config['SECRET_KEY'])
+        return jsonify({'token': token.decode('UTF-8')})
+    else:
+        return jsonify({'message': 'Invalid login information!'})
+
+    return jsonify({'message': 'Something went wrong!'})
+
 @app.route('/users', methods=['GET'])
 def get_all_users():
     '''
-    Return all users
+    Return all users as JSON
     '''
     users = User.query.order_by(User.join_date.desc()).all()
 
@@ -78,7 +101,7 @@ def create_user():
 @app.route('/user/<string:id>', methods=['GET'])
 def get_user(id):
     '''
-    Return a single user with public_id <id>
+    Return a single user with public_id <id> as JSON
     '''
     user = User.query.filter_by(public_id=id).first()
     return jsonify({'user': {'public_id': user.public_id, 'name': user.username}})
