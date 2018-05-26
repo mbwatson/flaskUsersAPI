@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 import jwt
 import secrets
+from functools import wraps
 
 #
 
@@ -29,6 +30,29 @@ class User(db.Model):
     admin = db.Column(db.Boolean, nullable=False, default=False)
     join_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
+# # #
+
+def token_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        token = None
+
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+
+        if not token:
+            return jsonify({'message': 'Token is required!'})
+
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+            user = User.query.filter_by(public_id=data['public_id']).first()
+        except:
+            return jsonify({'message': 'Token is invalid!'})
+
+        return jsonify({'message': 'Yay--got a token!'})
+
+    return decorated_function
+
 # Routes
 
 @app.route('/')
@@ -51,7 +75,7 @@ def login():
         token_data = {
             'username': user.username,
             'public_id': user.public_id,
-            'exp': datetime.utcnow() + timedelta(minutes=10)
+            'exp': datetime.utcnow() + timedelta(seconds=15)
         }
         token = jwt.encode(token_data, app.config['SECRET_KEY'])
         return jsonify({'token': token.decode('UTF-8')})
@@ -61,6 +85,7 @@ def login():
     return jsonify({'message': 'Something went wrong!'})
 
 @app.route('/users', methods=['GET'])
+@token_required
 def get_all_users():
     '''
     Return all users as JSON
