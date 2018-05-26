@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 import jwt
 import secrets
+
 #
 
 app = Flask(__name__)
@@ -47,10 +48,12 @@ def login():
         return jsonify({'message': 'Invalid login information!'})
 
     if bcrypt.check_password_hash(user.password, auth.password):
-        token = jwt.encode({
+        token_data = {
+            'username': user.username,
             'public_id': user.public_id,
             'exp': datetime.utcnow() + timedelta(minutes=10)
-        }, app.config['SECRET_KEY'])
+        }
+        token = jwt.encode(token_data, app.config['SECRET_KEY'])
         return jsonify({'token': token.decode('UTF-8')})
     else:
         return jsonify({'message': 'Invalid login information!'})
