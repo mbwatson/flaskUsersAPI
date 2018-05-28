@@ -131,7 +131,17 @@ def get_user(id):
     Return a single user with public_id <id> as JSON
     '''
     user = User.query.filter_by(public_id=id).first()
-    return jsonify({'user': {'public_id': user.public_id, 'name': user.username}})
+    return jsonify({
+        'user': {
+            'public_id': user.public_id,
+            'name': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'admin': user.admin,
+            'active': user.active
+        }
+    })
 
 @app.route('/user/<string:id>/promote', methods=['PUT'])
 @token_required
