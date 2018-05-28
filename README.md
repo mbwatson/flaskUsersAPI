@@ -57,3 +57,85 @@ Hitting the following endpoints with the given request methods will perform the 
 * `/user/deactivate/<id>` (`PUT`) : Deactivate user with public_id `<id>`
 * `/user/activate/<id>` (`PUT`) : Activate user with public_id `<id>`
 * `/user/delete/<id>` (`DELETE`) : Delete user with public_id `<id>`
+
+### Example
+
+1. Hit ``/user/new` with the JSON data
+
+```json
+{
+	"username":"someUser",
+	"first_name":"John",
+	"last_name":"Doe",
+	"password":"password",
+	"email":"example@example.com"
+}
+```
+
+2. Then `/users` will return all users in JSON format as shown here.
+
+```json
+{
+    "users": [
+        {
+            "active": true,
+            "admin": false,
+            "email": "example@example.com",
+            "first_name": "John",
+            "join_date": "Fri, 25 May 2018 17:17:37 GMT",
+            "last_name": "Doe",
+            "public_id": "adfb33008a8ded5b08fd",
+            "username": "someUser"
+        }
+    ]
+}
+```
+
+3. You can see that someUser has the `public_id` of `adfb33008a8ded5b08fd`, thus this single user can be accessed at `/user/adfb33008a8ded5b08fd`, which returns the user in JSON.
+
+```json
+{
+    "user": {
+        "active": true,
+        "admin": false,
+        "email": "example@example.com",
+        "first_name": "John",
+        "last_name": "Doe",
+        "name": "someUser",
+        "public_id": "adfb33008a8ded5b08fd"
+    }
+}
+```
+4. Get token at endpoint `/login`, which returns
+
+```json
+{
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InNvbWVVc2VyIiwicHVibGljX2lkIjoiYWRmYjMzMDA4YThkZWQ1YjA4ZmQiLCJleHAiOjE1Mjc1MTQxNzl9.DUtX4KRxheIaeNkBSykDqOl7wsv_h0oOl2vK2i0CdZQ"
+}
+```
+
+5. Now we can do powerful things like promote, activate, deactivate, and delete users by simply hitting the endpoint  `user/adfb33008a8ded5b08fd/promote` with our token from step 4 in the header: key `x-access-token`, value `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InNvbWVVc2VyIiwicHVibGljX2lkIjoiYWRmYjMzMDA4YThkZWQ1YjA4ZmQiLCJleHAiOjE1Mjc1MTQxNzl9.DUtX4KRxheIaeNkBSykDqOl7wsv_h0oOl2vK2i0CdZQ` to promote someUser. Doing so returns a confirmation message.
+
+```json
+{
+    "message": "User (adfb33008a8ded5b08fd) promoted!"
+}
+```
+
+6. Now, the endpoint `/user/` returns
+
+```json
+{
+    "user": {
+        "active": true,
+        "admin": true,
+        "email": "example@example.com",
+        "first_name": "John",
+        "last_name": "Doe",
+        "name": "someUser",
+        "public_id": "adfb33008a8ded5b08fd"
+    }
+}
+```
+
+Notice someUser's admin status is changed.
