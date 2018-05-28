@@ -45,11 +45,11 @@ def token_required(func):
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
-            user = User.query.filter_by(public_id=data['public_id']).first()
+            current_user = User.query.filter_by(public_id=data['public_id']).first()
         except:
             return jsonify({'message': 'Token is invalid!'})
 
-        return jsonify({'message': 'Yay--got a token!'})
+        return func(current_user, *args, **kwargs)
 
     return decorated_function
 
@@ -75,7 +75,7 @@ def login():
         token_data = {
             'username': user.username,
             'public_id': user.public_id,
-            'exp': datetime.utcnow() + timedelta(seconds=15)
+            'exp': datetime.utcnow() + timedelta(seconds=300)
         }
         token = jwt.encode(token_data, app.config['SECRET_KEY'])
         return jsonify({'token': token.decode('UTF-8')})
@@ -85,7 +85,6 @@ def login():
     return jsonify({'message': 'Something went wrong!'})
 
 @app.route('/users', methods=['GET'])
-@token_required
 def get_all_users():
     '''
     Return all users as JSON
@@ -134,8 +133,9 @@ def get_user(id):
     user = User.query.filter_by(public_id=id).first()
     return jsonify({'user': {'public_id': user.public_id, 'name': user.username}})
 
-@app.route('/user/promote/<string:id>', methods=['PUT'])
-def promote_user(id):
+@app.route('/user/<string:id>/promote', methods=['PUT'])
+@token_required
+def promote_user(current_user, id):
     '''
     Give user with public_id <id> admin status
     '''
@@ -152,8 +152,9 @@ def promote_user(id):
 
     return jsonify({'message': f'User ({id}) promoted!'})
 
-@app.route('/user/demote/<string:id>', methods=['PUT'])
-def demote_user(id):
+@app.route('/user/<string:id>/demote', methods=['PUT'])
+@token_required
+def demote_user(current_user, id):
     '''
     Remove admin status from user with public_id <id>
     '''
@@ -170,8 +171,9 @@ def demote_user(id):
 
     return jsonify({'message': f'User ({id}) demoted!'})
 
-@app.route('/user/deactivate/<string:id>', methods=['PUT'])
-def deactivate_user(id):
+@app.route('/user/<string:id>/deactivate', methods=['PUT'])
+@token_required
+def deactivate_user(current_user, id):
     '''
     Deactivate user with public_id <id>
     '''
@@ -188,8 +190,9 @@ def deactivate_user(id):
 
     return jsonify({'message': f'User ({id}) deactivated!'})
 
-@app.route('/user/activate/<string:id>', methods=['PUT'])
-def activate_user(id):
+@app.route('/user/<string:id>/activate', methods=['PUT'])
+@token_required
+def activate_user(current_user, id):
     '''
     Activate user with public_id <id>
     '''
@@ -207,7 +210,8 @@ def activate_user(id):
     return jsonify({'message': f'User ({id}) activated!'})
 
 @app.route('/user/delete/<string:id>', methods=['DELETE'])
-def delete_user(id):
+@token_required
+def delete_user(current_user, id):
     '''
     Delete user with public_id <id>
     '''
