@@ -31,7 +31,7 @@ Now you are ready to start your server with the following command.
 
     python users.py
 
-It will run in debug mode. Nagivating to `localhost:5000` in your browser will show the message `The API is ready!`. Now you can hit the endpoints with your favorite application. [Postman](https://www.getpostman.com/) is a great option.
+It will run in debug mode. Navigating to `localhost:5000` in your browser will show the message `The API is ready!`. Now you can hit the endpoints with your favorite application&mdash;[Postman](https://www.getpostman.com/) is a great option.
 
 ## Use
 
