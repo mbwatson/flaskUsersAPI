@@ -122,7 +122,7 @@ Hitting the following endpoints with the given request methods will perform the 
 }
 ```
 
-6. Now, the endpoint `/user/` returns
+6. Now, the endpoint `/user/adfb33008a8ded5b08fd` returns
 
 ```json
 {
