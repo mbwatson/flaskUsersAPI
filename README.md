@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-This uses `datetime`, `secrets`, `flask`, `flask_sqlalchemy`, and `flask_bcrypt`. The former two are part of the Python standard library. The latter will need to be installed. To do so, simply run `pip install flask`, `pip install flask_sqlalchemy`, and `pip install flask_bcrypt`.
+This uses `datetime`, `secrets`, `flask`, `flask_sqlalchemy`, and `flask_bcrypt`. The former two are part of the Python standard library. The latter three may need to be installed. To do so, simply run `pip install flask`, `pip install flask_sqlalchemy`, and `pip install flask_bcrypt` as needed.
 
 This is hardcoded to use sqlite database, although SQLAlchemy can be configured for other options. I'll describe how to set up sqlite. You will need sqlite on your machine; let's install sqlite3. You may already have it; if it's installed, the command `sqlite3 -version` will return a version number, as illustrated below.
 
